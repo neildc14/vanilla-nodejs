@@ -48,8 +48,37 @@ const createProduct = async (req, res) => {
   }
 };
 
+const updateProduct = async (req, res, id) => {
+  try {
+    const findProduct = await Product.findById(id);
+
+    if (!findProduct) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ message: "Product not found." }));
+    }
+
+    const body = await getPostData(req);
+    const { title, description, price } = JSON.parse(body);
+
+    const product = {
+      title: title || findProduct?.title,
+      description: description || findProduct?.description,
+      price: price || findProduct?.price,
+    };
+
+    console.log({ product });
+    const updateProduct = await Product.updateById(product, id);
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(updateProduct));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   getProducts,
   getProduct,
   createProduct,
+  updateProduct,
 };
