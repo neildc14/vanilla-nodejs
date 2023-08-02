@@ -38,9 +38,26 @@ const updateById = (product, id) => {
   });
 };
 
+const deleteById = (id) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const index = products.findIndex((prod) => prod.id === id);
+
+      if (index !== -1) {
+        const deletedProduct = products.splice(index, 1);
+        writeDataToFile("./data/products.json", products);
+        resolve(deletedProduct);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  });
+};
+
 module.exports = {
   findAll,
   findById,
   create,
   updateById,
+  deleteById,
 };
